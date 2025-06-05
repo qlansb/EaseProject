@@ -15,9 +15,9 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
-  // Firebase login using email and password
+  // ✅ RETURN the result so LoginForm can .catch() properly
   const login = async (email, password) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    return signInWithEmailAndPassword(auth, email, password);
   };
 
   const logout = async () => {
@@ -25,14 +25,9 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
-  // Track login state changes
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      if (firebaseUser) {
-        setUser(firebaseUser);
-      } else {
-        setUser(null);
-      }
+      setUser(firebaseUser ?? null);
     });
     return unsubscribe;
   }, []);
