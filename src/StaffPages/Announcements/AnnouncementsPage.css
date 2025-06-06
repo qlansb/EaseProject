@@ -1,0 +1,55 @@
+.announcements-container {
+  padding: 20px;
+  max-width: 700px;
+  margin: auto;
+}
+
+.announcement-form input,
+.announcement-form textarea {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 0.5rem;
+}
+
+.announcement-form button {
+  padding: 0.5rem 1rem;
+  background-color: #4287f5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.announcement-form button:hover {
+  background-color: #326ddf;
+}
+
+.announcement-list {
+  list-style: none;
+  padding: 0;
+}
+
+.announcement-item {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+
+.edit-buttons {
+  margin-top: 10px;
+}
+
+.edit-buttons button {
+  margin-right: 10px;
+  padding: 0.4rem 0.8rem;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.edit-buttons button:hover {
+  background-color: #ddd;
+}

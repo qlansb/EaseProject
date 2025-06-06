@@ -1,17 +1,28 @@
+// src/App.jsx
 import { Routes, Route } from "react-router-dom";
+
+// Pages
 import LoginForm from "./Components/LoginForm";
 import ElderDashboard from "./Pages/ElderDashboard";
 import HomeStaffDashboard from "./Pages/HomeStaffDashboard";
 import FamilyDashboard from "./Pages/FamilyDashboard";
+
+// Staff Feature Pages (✅ fixed folder name)
+import AnnouncementsPage from "./StaffPages/Announcements/AnnouncementsPage";
+import CalendarPage from "./StaffPages/Calendar/Calendar";
+import VideosPage from "./StaffPages/Videos/Videos";
+import FeedbackPage from "./StaffPages/Feedback/Feedback";
+
+// Route protection
 import PrivateRoute from "./Routes/PrivateRoute";
 
 export default function App() {
   return (
     <Routes>
-      {/* Public route */}
+      {/* Public Login Page */}
       <Route path="/" element={<LoginForm />} />
 
-      {/* Role-based routes */}
+      {/* Role-Specific Dashboards */}
       <Route
         path="/elder"
         element={
@@ -37,36 +48,36 @@ export default function App() {
         }
       />
 
-      {/* 🆕 Staff Subpages */}
+      {/* Staff Feature Subroutes */}
       <Route
-        path="/staff/announcements"
+        path="/staff/Announcements"
         element={
           <PrivateRoute role="staff">
-            <h2>Announcements Page</h2>
+            <AnnouncementsPage />
           </PrivateRoute>
         }
       />
       <Route
-        path="/staff/calendar"
+        path="/staff/Calendar"
         element={
           <PrivateRoute role="staff">
-            <h2>Calendar Page</h2>
+            <CalendarPage />
           </PrivateRoute>
         }
       />
       <Route
-        path="/staff/videos"
+        path="/staff/Videos"
         element={
           <PrivateRoute role="staff">
-            <h2>Videos Page</h2>
+            <VideosPage />
           </PrivateRoute>
         }
       />
       <Route
-        path="/staff/feedback"
+        path="/staff/Feedback"
         element={
           <PrivateRoute role="staff">
-            <h2>Feedback Page</h2>
+            <FeedbackPage />
           </PrivateRoute>
         }
       />
