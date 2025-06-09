@@ -33,7 +33,7 @@ export default function LoginForm() {
 
     if (!role || !homeId) throw new Error("Missing role or homeId");
 
-    if (['elder', 'staff', 'family'].includes(role)) {
+    if (['Enhance', 'Staff', 'Regular'].includes(role)) {
       navigate(`/${role}`);
     } else {
       throw new Error("Invalid role");
