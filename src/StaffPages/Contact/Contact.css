@@ -1,0 +1,79 @@
+/* src/StaffPages/Contact/ContactPage.css */
+
+.contact-page {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8fbff;
+  font-family: "Helvetica Neue", sans-serif;
+}
+
+h2 {
+  text-align: center;
+  color: #1a237e;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.message-box {
+  flex-grow: 1;
+  overflow-y: auto;
+  background: #ffffff;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+.my-message,
+.their-message {
+  padding: 10px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.my-message {
+  background-color: #c5e1a5;
+  align-self: flex-end;
+  text-align: right;
+}
+
+.their-message {
+  background-color: #bbdefb;
+  align-self: flex-start;
+}
+
+.message-input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.message-input textarea {
+  resize: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+.message-input button {
+  align-self: flex-end;
+  background-color: #1e88e5;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.message-input button:hover {
+  background-color: #1565c0;
+}

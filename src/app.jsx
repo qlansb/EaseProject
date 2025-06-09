@@ -11,7 +11,7 @@ import FamilyDashboard from "./Pages/FamilyDashboard";
 import AnnouncementsPage from "./StaffPages/Announcements/AnnouncementsPage";
 import CalendarPage from "./StaffPages/Calendar/Calendar";
 import VideosPage from "./StaffPages/Videos/Videos";
-import FeedbackPage from "./StaffPages/Feedback/Feedback";
+import ContactPage from "./StaffPages/Contact/Contact";
 
 // Route protection
 import PrivateRoute from "./Routes/PrivateRoute";
@@ -74,10 +74,10 @@ export default function App() {
         }
       />
       <Route
-        path="/staff/Feedback"
+        path="/staff/Contact"
         element={
           <PrivateRoute role="staff">
-            <FeedbackPage />
+            <ContactPage />
           </PrivateRoute>
         }
       />

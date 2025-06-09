@@ -10,10 +10,11 @@ import {
   where,
   orderBy,
   onSnapshot,
-  getDoc,
-  serverTimestamp,
   Timestamp,
+  getDoc,
+  serverTimestamp
 } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 import { db } from '../../firebase';
 import { useAuth } from '../../Auth/AuthContext';
 
@@ -27,7 +28,13 @@ export default function AnnouncementsPage() {
   const [editingId, setEditingId] = useState(null);
   const [editingData, setEditingData] = useState({ title: '', body: '' });
 
-  // Get user's homeId and role
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate('/staff');
+  };
+
+  // Fetch user's homeId and role
   useEffect(() => {
     const fetchUserData = async () => {
       const docRef = doc(db, 'users', user.uid);
@@ -42,17 +49,17 @@ export default function AnnouncementsPage() {
     if (user) fetchUserData();
   }, [user]);
 
-  // Load announcements from last 48 hours
+  // Load real-time announcements from the last 48 hours
   useEffect(() => {
     if (!homeId) return;
 
-    const now = Date.now();
-    const cutoff = Timestamp.fromMillis(now - 48 * 60 * 60 * 1000);
+    const now = Timestamp.now();
+    const cutoff = Timestamp.fromMillis(now.toMillis() - 48 * 60 * 60 * 1000);
 
     const q = query(
       collection(db, 'announcements'),
       where('homeId', '==', homeId),
-      orderBy('createdAt', 'desc'), // MUST orderBy before where on same field
+      orderBy('createdAt', 'desc'),
       where('createdAt', '>=', cutoff)
     );
 
@@ -84,10 +91,12 @@ export default function AnnouncementsPage() {
     setBody('');
   };
 
+  // Delete
   const handleDelete = async (id) => {
     await deleteDoc(doc(db, 'announcements', id));
   };
 
+  // Save edit
   const handleEdit = async (id) => {
     await updateDoc(doc(db, 'announcements', id), {
       title: editingData.title,
@@ -99,8 +108,12 @@ export default function AnnouncementsPage() {
 
   return (
     <div className="announcements-page">
+      {/* Back Button */}
+      <button className="back-button" onClick={handleBack}>← Back</button>
+
       <h2>Announcements</h2>
 
+      {/* Staff-only form */}
       {role === 'staff' && (
         <form onSubmit={handleSubmit} className="announcement-form">
           <input
@@ -118,6 +131,7 @@ export default function AnnouncementsPage() {
         </form>
       )}
 
+      {/* Announcement list */}
       <ul className="announcement-list">
         {announcements.map((a) => (
           <li key={a.id} className="announcement-item">
@@ -135,16 +149,20 @@ export default function AnnouncementsPage() {
                     setEditingData({ ...editingData, body: e.target.value })
                   }
                 />
-                <button onClick={() => handleEdit(a.id)}>Save</button>
-                <button onClick={() => setEditingId(null)}>Cancel</button>
+                <div className="announcement-actions">
+                  <button onClick={() => handleEdit(a.id)}>Save</button>
+                  <button onClick={() => setEditingId(null)}>Cancel</button>
+                </div>
               </>
             ) : (
               <>
                 <h3>{a.title}</h3>
                 <p>{a.body}</p>
-                <small>{a.createdAt?.toDate().toLocaleString()}</small>
+                <div className="announcement-meta">
+                  <small>{a.createdAt ? a.createdAt.toDate().toLocaleString() : '...'}</small>
+                </div>
                 {role === 'staff' && (
-                  <>
+                  <div className="announcement-actions">
                     <button
                       onClick={() => {
                         setEditingId(a.id);
@@ -154,7 +172,7 @@ export default function AnnouncementsPage() {
                       Edit
                     </button>
                     <button onClick={() => handleDelete(a.id)}>Delete</button>
-                  </>
+                  </div>
                 )}
               </>
             )}

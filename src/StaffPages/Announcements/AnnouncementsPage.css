@@ -1,55 +1,131 @@
-.announcements-container {
+/* === Page Container === */
+.announcements-page {
+  height: 100vh;
+  margin: 0;
+  padding: 40px 60px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background-color: #f0f4f8;
+  color: #1a237e;
+  font-family: 'Helvetica Neue', sans-serif;
+}
+
+/* === Header === */
+.announcements-page h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #1a237e;
+}
+
+/* === Form Section === */
+.announcement-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #fff;
   padding: 20px;
-  max-width: 700px;
-  margin: auto;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .announcement-form input,
 .announcement-form textarea {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 0.5rem;
+  font-size: 1rem;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.announcement-form textarea {
+  min-height: 60px;
+  max-height: 200px;
 }
 
 .announcement-form button {
-  padding: 0.5rem 1rem;
-  background-color: #4287f5;
+  background-color: #1e88e5;
   color: white;
+  padding: 12px;
+  font-size: 1rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
 }
 
 .announcement-form button:hover {
-  background-color: #326ddf;
+  background-color: #1565c0;
 }
 
+/* === Announcement List === */
 .announcement-list {
-  list-style: none;
-  padding: 0;
+  margin-top: 20px;
+  overflow-y: auto;
+  flex-grow: 1;
+  padding-right: 8px;
 }
 
 .announcement-item {
-  margin-bottom: 20px;
-  padding: 15px;
-  border: 1px solid #ddd;
+  background-color: #e3f2fd;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.announcement-item h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.announcement-item p {
+  margin: 0;
+  font-size: 1rem;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.announcement-item small {
+  color: #555;
+}
+
+.announcement-item input,
+.announcement-item textarea {
+  width: 100%;
+  padding: 8px;
+  font-size: 1rem;
   border-radius: 8px;
-  background: #f9f9f9;
-}
-
-.edit-buttons {
-  margin-top: 10px;
-}
-
-.edit-buttons button {
-  margin-right: 10px;
-  padding: 0.4rem 0.8rem;
-  background-color: #eee;
   border: 1px solid #ccc;
-  border-radius: 6px;
-  cursor: pointer;
+  resize: vertical;
 }
 
-.edit-buttons button:hover {
-  background-color: #ddd;
+.announcement-item textarea {
+  min-height: 60px;
+}
+
+/* === Edit/Delete Buttons === */
+.announcement-item button {
+  background-color: #dfe6e9;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.announcement-item button:hover {
+  background-color: #cfd8dc;
+}
+
+.announcement-item .button-group {
+  align-self: flex-end;
+  display: flex;
+  gap: 10px;
 }
