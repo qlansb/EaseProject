@@ -15,6 +15,7 @@ import {
   onSnapshot,
   Timestamp,
   getDoc,
+  getDocs,
   serverTimestamp
 } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
@@ -29,6 +30,7 @@ export default function AdminAnnouncementsPage() {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [expirationDate, setExpirationDate] = useState(null);
+  const [expirationTime, setExpirationTime] = useState('17:00');
   const [editingId, setEditingId] = useState(null);
   const [editingData, setEditingData] = useState({ title: '', body: '' });
   const [loading, setLoading] = useState(true);
@@ -60,25 +62,33 @@ export default function AdminAnnouncementsPage() {
   }, [user]);
 
   useEffect(() => {
-    if (!homeId) return;
+  if (!homeId) return;
 
-    const q = query(
-      collection(db, 'announcements'),
-      where('homeId', '==', homeId),
-      where('expiresAt', '>=', Timestamp.now()),
-      orderBy('expiresAt', 'desc')
-    );
+  const q = query(
+    collection(db, 'announcements'),
+    where('homeId', '==', homeId),
+    orderBy('createdAt', 'desc')
+  );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    const now = new Date();
+    const data = snapshot.docs
+      .map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      }));
-      setAnnouncements(data);
-    });
+      }))
+      .filter((doc) => {
+        // show only if no expiresAt or not expired yet
+        const expires = doc.expiresAt?.toDate?.();
+        return !expires || expires >= now;
+      });
 
-    return () => unsubscribe();
-  }, [homeId]);
+    setAnnouncements(data);
+  });
+
+  return () => unsubscribe();
+}, [homeId]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,20 +100,25 @@ export default function AdminAnnouncementsPage() {
     }
 
     const expiresAt = expirationDate
-      ? new Date(
-          expirationDate.getFullYear(),
-          expirationDate.getMonth(),
-          expirationDate.getDate(),
-          17, 0, 0
-        )
-      : new Date(Date.now() + 48 * 60 * 60 * 1000);
+      ? (() => {
+          const [hour, minute] = expirationTime.split(':').map(Number);
+          return new Date(
+            expirationDate.getFullYear(),
+            expirationDate.getMonth(),
+            expirationDate.getDate(),
+            hour,
+            minute,
+            0
+          );
+        })()
+      : new Date(Date.now() + 48 * 60 * 60 * 1000); // 48 hours default
 
     try {
       await addDoc(collection(db, 'announcements'), {
         title,
         body,
         createdAt: serverTimestamp(),
-        expiresAt,
+        expiresAt: Timestamp.fromDate(expiresAt),
         homeId,
         uid: user.uid,
       });
@@ -111,6 +126,7 @@ export default function AdminAnnouncementsPage() {
       setTitle('');
       setBody('');
       setExpirationDate(null);
+      setExpirationTime('17:00');
       setStatus({ message: "Announcement posted!", type: "success" });
     } catch (err) {
       console.error(err);
@@ -123,12 +139,26 @@ export default function AdminAnnouncementsPage() {
   };
 
   const handleEdit = async (id) => {
-    await updateDoc(doc(db, 'announcements', id), {
-      title: editingData.title,
-      body: editingData.body,
-    });
-    setEditingId(null);
-    setEditingData({ title: '', body: '' });
+    const original = announcements.find((a) => a.id === id);
+    if (
+      original.title === editingData.title.trim() &&
+      original.body === editingData.body.trim()
+    ) {
+      setEditingId(null);
+      return;
+    }
+
+    try {
+      await updateDoc(doc(db, 'announcements', id), {
+        title: editingData.title,
+        body: editingData.body,
+      });
+      setEditingId(null);
+      setEditingData({ title: '', body: '' });
+    } catch (err) {
+      console.error(err);
+      setStatus({ message: "Failed to update announcement.", type: "error" });
+    }
   };
 
   return (
@@ -170,16 +200,29 @@ export default function AdminAnnouncementsPage() {
                 inline
               />
             )}
+
+            <label htmlFor="expiration-time" className="time-label">Time:</label>
+            <select
+              id="expiration-time"
+              value={expirationTime}
+              onChange={(e) => setExpirationTime(e.target.value)}
+              className="time-select"
+            >
+              <option value="08:00">8:00 AM</option>
+              <option value="12:00">12:00 PM</option>
+              <option value="17:00">5:00 PM</option>
+              <option value="20:00">8:00 PM</option>
+            </select>
           </div>
 
           <button type="submit">Post</button>
-        </form>
-      )}
 
-      {status.message && (
-        <p style={{ color: status.type === "error" ? "red" : "green" }}>
-          {status.message}
-        </p>
+          {status.message && (
+            <p style={{ color: status.type === "error" ? "red" : "green" }}>
+              {status.message}
+            </p>
+          )}
+        </form>
       )}
 
       <ul className="announcement-list">
@@ -211,7 +254,7 @@ export default function AdminAnnouncementsPage() {
                 <div className="announcement-meta">
                   <small>
                     {a.expiresAt
-                      ? `Expires: ${a.expiresAt.toDate().toLocaleDateString()} at 5:00 PM`
+                      ? `Expires: ${a.expiresAt.toDate().toLocaleDateString()} at ${a.expiresAt.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
                       : ''}
                   </small>
                 </div>

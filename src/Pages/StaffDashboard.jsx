@@ -1,5 +1,5 @@
 // src/Pages/HomeStaffDashboard.jsx
-import './HomeStaffDashboard.css';
+import './StaffDashboard.css';
 import { FaBullhorn, FaCalendarAlt, FaVideo, FaCommentDots } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,7 +10,7 @@ export default function HomeStaffDashboard() {
     { icon: <FaBullhorn />, label: 'Announcements', path: '/staff/announcements' },
     { icon: <FaCalendarAlt />, label: 'Calendar', path: '/staff/calendar' },
     { icon: <FaVideo />, label: 'Videos', path: '/staff/videos' },
-    { icon: <FaCommentDots />, label: 'Contact', path: '/staff/Contact' }
+    { icon: <FaCommentDots />, label: 'Contact', path: '/staff/contact' } // ✅ lowercase path
   ];
 
   return (

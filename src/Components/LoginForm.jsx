@@ -7,47 +7,57 @@ import { auth, db } from '../firebase';
 export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState(''); // ✅ new state for error
+  const [errorMessage, setErrorMessage] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  console.log("Login form submitted");
+    e.preventDefault();
+    setErrorMessage('');
 
-  try {
-    console.log("Trying login...");
-    await login(email.trim(), password);
-    console.log("Login succeeded");
+    try {
+      // 🔐 Attempt Firebase Auth login
+      await login(email.trim(), password);
 
-    const uid = auth.currentUser.uid;
-    console.log("UID:", uid);
+      const uid = auth.currentUser.uid;
+      const userRef = doc(db, 'users', uid);
+      const userSnap = await getDoc(userRef);
 
-    const userRef = doc(db, 'users', uid);
-    const userSnap = await getDoc(userRef);
+      if (!userSnap.exists()) {
+        throw new Error("User not found in Firestore.");
+      }
 
-    if (!userSnap.exists()) throw new Error("User not found in Firestore");
+      const { role, homeId } = userSnap.data();
 
-    const { role, homeId } = userSnap.data();
-    console.log("User role:", role, "Home ID:", homeId);
+      // ✅ Normalize role to lowercase
+      const normalizedRole = role?.toLowerCase();
+      const allowedRoles = ['enhanced', 'regular', 'staff', 'staffadmin'];
 
-    if (!role || !homeId) throw new Error("Missing role or homeId");
+      // ✅ Validate and route user by role
+      if (!normalizedRole || !allowedRoles.includes(normalizedRole)) {
+        throw new Error("Invalid or missing role.");
+      }
 
-    if (['Enhance', 'Staff', 'Regular'].includes(role)) {
-      navigate(`/${role}`);
-    } else {
-      throw new Error("Invalid role");
+      if (!homeId) {
+        throw new Error("Missing home ID.");
+      }
+
+      if (normalizedRole === 'staffadmin') {
+        navigate('/staff-admin');
+      } else {
+        navigate(`/${normalizedRole}`);
+      }
+
+    } catch (err) {
+      console.error("Login error:", err.message);
+      setErrorMessage("Login failed: " + err.message);
     }
-  } catch (err) {
-    console.error("Login error:", err.message);
-    setErrorMessage("Login failed: " + err.message);
-  }
-};
-
+  };
 
   return (
     <form onSubmit={handleSubmit}>
       <h2>Login</h2>
+
       <input
         type="email"
         placeholder="Email"
@@ -55,6 +65,7 @@ export default function LoginForm() {
         onChange={e => setEmail(e.target.value)}
         required
       />
+
       <input
         type="password"
         placeholder="Password"
@@ -62,10 +73,12 @@ export default function LoginForm() {
         onChange={e => setPassword(e.target.value)}
         required
       />
+
       <button type="submit">Login</button>
 
-      {/* ✅ Show error message */}
-      {errorMessage && <p style={{ color: 'red', marginTop: '10px' }}>{errorMessage}</p>}
+      {errorMessage && (
+        <p style={{ color: 'red', marginTop: '10px' }}>{errorMessage}</p>
+      )}
     </form>
   );
 }

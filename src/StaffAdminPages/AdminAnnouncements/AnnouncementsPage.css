@@ -23,13 +23,14 @@
 .announcement-form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   background: #FFFFFF; /* easeCard */
   padding: 20px;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
+/* === Inputs & Buttons === */
 .announcement-form input,
 .announcement-form textarea {
   font-size: 1rem;
@@ -38,7 +39,6 @@
   border: 1px solid #ccc;
   resize: vertical;
   box-sizing: border-box;
-  color: #1C1C1E; /* easeTextPrimary */
 }
 
 .announcement-form textarea {
@@ -47,41 +47,18 @@
 }
 
 .announcement-form button {
-  background-color: #A0C49D; /* easeAccent */
-  color: #1C1C1E;
+  background-color: #2F4F30; /* easeBrandPrimary */
+  color: white;
   padding: 12px;
   font-size: 1rem;
   border: none;
   border-radius: 10px;
   cursor: pointer;
+  transition: background 0.2s ease;
 }
 
 .announcement-form button:hover {
-  background-color: #FFD59E; /* easeHighlight */
-}
-
-/* === Calendar Dropdown === */
-.calendar-dropdown-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-width: 240px;
-}
-
-.dropdown-toggle {
-  background-color: #FFFFFF; /* easeCard */
-  color: #1C1C1E;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  text-align: left;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-}
-
-.dropdown-toggle:hover {
-  background-color: #FFD59E; /* easeHighlight */
+  background-color: #507C5C; /* easeBrandSecondary */
 }
 
 /* === Announcement List === */
@@ -93,7 +70,7 @@
 }
 
 .announcement-item {
-  background-color: #FFFFFF; /* easeCard */
+  background-color: #E3F2FD;
   padding: 16px;
   border-radius: 12px;
   margin-bottom: 16px;
@@ -107,7 +84,6 @@
   margin: 0;
   font-size: 1.2rem;
   font-weight: 600;
-  color: #1C1C1E; /* easeTextPrimary */
 }
 
 .announcement-item p {
@@ -115,7 +91,6 @@
   font-size: 1rem;
   word-wrap: break-word;
   white-space: pre-wrap;
-  color: #1C1C1E;
 }
 
 .announcement-item small {
@@ -130,7 +105,6 @@
   border-radius: 8px;
   border: 1px solid #ccc;
   resize: vertical;
-  color: #1C1C1E;
 }
 
 .announcement-item textarea {
@@ -139,31 +113,63 @@
 
 /* === Edit/Delete Buttons === */
 .announcement-item button {
-  background-color: #E3E3E3;
+  background-color: #dfe6e9;
   border: none;
   padding: 6px 12px;
   border-radius: 8px;
   font-size: 14px;
   cursor: pointer;
   margin-right: 10px;
-  color: #1C1C1E;
 }
 
 .announcement-item button:hover {
-  background-color: #FFD59E; /* easeHighlight */
+  background-color: #cfd8dc;
 }
 
-.announcement-item .button-group {
-  align-self: flex-end;
+/* === Calendar & Time Controls === */
+.calendar-dropdown-wrapper {
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  gap: 6px;
 }
 
-/* === Status Messages === */
-.status-success {
-  color: #7AC87C; /* easeSuccess */
+.dropdown-toggle {
+  background-color: #FFD59E; /* easeHighlight */
+  color: #1C1C1E; /* easeTextPrimary */
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 1rem;
+  width: fit-content;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 
-.status-error {
-  color: #E57474; /* easeError */
+.dropdown-toggle:hover {
+  background-color: #F4C989;
+}
+
+.react-datepicker {
+  font-size: 1rem;
+  max-width: 280px;
+}
+
+.react-datepicker__day--selected {
+  background-color: #A0C49D !important; /* easeAccent */
+}
+
+.time-label {
+  margin-top: 8px;
+  font-weight: 500;
+  color: #2F4F30;
+}
+
+.time-select {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  width: fit-content;
+  background-color: #FFFFFF;
+  color: #1C1C1E;
 }
